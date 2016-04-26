@@ -1,12 +1,11 @@
 package com.hema.www.xlistviewpullrefreshdemo.widget;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -41,6 +40,8 @@ public class XHeaderView extends LinearLayout {
     private Animation mRotateDownAnim;
 
     private boolean mIsFirst;
+    private ImageView refresh_img;
+    private AnimationDrawable animationDrawable;
 
     public XHeaderView(Context context) {
         super(context);
@@ -55,23 +56,31 @@ public class XHeaderView extends LinearLayout {
     private void initView(Context context) {
         // Initial set header view height 0
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0);
-        mContainer = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.vw_header, null);
+//        mContainer = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.vw_header, null);
+        mContainer = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.custom_vw_header, null);
         addView(mContainer, lp);
         setGravity(Gravity.BOTTOM);
 
-        mArrowImageView = (ImageView) findViewById(R.id.header_arrow);
-        mHintTextView = (TextView) findViewById(R.id.header_hint_text);
-        mProgressBar = (ProgressBar) findViewById(R.id.header_progressbar);
+        mHintTextView = (TextView) findViewById(R.id.refresh_text);
+        refresh_img = (ImageView) findViewById(R.id.refresh_img);
 
-        mRotateUpAnim = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        mRotateUpAnim.setDuration(ROTATE_ANIM_DURATION);
-        mRotateUpAnim.setFillAfter(true);
+        mHintTextView.setText("下拉刷新");
+        refresh_img.setImageResource(R.drawable.home_refresh_anim);
+        animationDrawable = (AnimationDrawable) refresh_img.getDrawable();
 
-        mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        mRotateDownAnim.setDuration(ROTATE_ANIM_DURATION);
-        mRotateDownAnim.setFillAfter(true);
+//        mArrowImageView = (ImageView) findViewById(R.id.header_arrow);
+//        mHintTextView = (TextView) findViewById(R.id.header_hint_text);
+//        mProgressBar = (ProgressBar) findViewById(R.id.header_progressbar);
+//
+//        mRotateUpAnim = new RotateAnimation(0.0f, -180.0f, Animation.RELATIVE_TO_SELF, 0.5f,
+//                Animation.RELATIVE_TO_SELF, 0.5f);
+//        mRotateUpAnim.setDuration(ROTATE_ANIM_DURATION);
+//        mRotateUpAnim.setFillAfter(true);
+//
+//        mRotateDownAnim = new RotateAnimation(-180.0f, 0.0f, Animation.RELATIVE_TO_SELF, 0.5f,
+//                Animation.RELATIVE_TO_SELF, 0.5f);
+//        mRotateDownAnim.setDuration(ROTATE_ANIM_DURATION);
+//        mRotateDownAnim.setFillAfter(true);
     }
 
     public void setState(int state) {
@@ -82,23 +91,26 @@ public class XHeaderView extends LinearLayout {
 
         if (state == STATE_REFRESHING) {
             // show progress
-            mArrowImageView.clearAnimation();
-            mArrowImageView.setVisibility(View.INVISIBLE);
-            mProgressBar.setVisibility(View.VISIBLE);
+//            mArrowImageView.clearAnimation();
+//            mArrowImageView.setVisibility(View.INVISIBLE);
+//            mProgressBar.setVisibility(View.VISIBLE);
+            animationDrawable.start();
         } else {
             // show arrow image
-            mArrowImageView.setVisibility(View.VISIBLE);
-            mProgressBar.setVisibility(View.INVISIBLE);
+//            mArrowImageView.setVisibility(View.VISIBLE);
+//            mProgressBar.setVisibility(View.INVISIBLE);
+            animationDrawable.stop();
+            refresh_img.clearAnimation();
         }
 
         switch (state) {
             case STATE_NORMAL:
                 if (mState == STATE_READY) {
-                    mArrowImageView.startAnimation(mRotateDownAnim);
+//                    mArrowImageView.startAnimation(mRotateDownAnim);
                 }
 
                 if (mState == STATE_REFRESHING) {
-                    mArrowImageView.clearAnimation();
+//                    mArrowImageView.clearAnimation();
                 }
 
                 mHintTextView.setText(R.string.header_hint_refresh_normal);
@@ -106,13 +118,15 @@ public class XHeaderView extends LinearLayout {
 
             case STATE_READY:
                 if (mState != STATE_READY) {
-                    mArrowImageView.clearAnimation();
-                    mArrowImageView.startAnimation(mRotateUpAnim);
+//                    mArrowImageView.clearAnimation();
+//                    mArrowImageView.startAnimation(mRotateUpAnim);
                     mHintTextView.setText(R.string.header_hint_refresh_ready);
+                    refresh_img.clearAnimation();
                 }
                 break;
 
             case STATE_REFRESHING:
+                animationDrawable.start();
                 mHintTextView.setText(R.string.header_hint_refresh_loading);
                 break;
 

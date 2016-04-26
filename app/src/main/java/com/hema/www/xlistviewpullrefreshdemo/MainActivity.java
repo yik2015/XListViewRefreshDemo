@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements XListView.IXListV
     private void onLoad() {
         listView.stopRefresh();
         listView.stopLoadMore();
-        listView.setRefreshTime(getTime());
+//        listView.setRefreshTime(getTime());
     }
 
     @Override
